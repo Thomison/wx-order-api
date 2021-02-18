@@ -24,7 +24,7 @@ public class AdminController {
     private IAdminService adminService;
 
     /**
-     * 处理用户登录请求
+     * 处理管理员登录的post请求
      *
      * @param admin
      * @return CommonResult
