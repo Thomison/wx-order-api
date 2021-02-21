@@ -41,7 +41,8 @@ public interface GoodMapper extends BaseMapper<Good> {
             "from " +
                 "goods_info as a, goods_category as b, store_info as c " +
             "where " +
-                "a.cate_id = b.cate_id and a.store_id = c.store_id ")
+                "a.cate_id=b.cate_id and a.store_id=c.store_id and " +
+                "a.deleted=0 and b.deleted=0 and c.deleted=0")
     List<GoodCateStoreVO> selectAll();
 
     /**
@@ -68,7 +69,9 @@ public interface GoodMapper extends BaseMapper<Good> {
             "from " +
                 "goods_info as a, goods_category as b, store_info as c " +
             "where " +
-                "a.cate_id = b.cate_id and a.store_id = c.store_id and c.store_id = #{storeId}")
+                "a.cate_id=b.cate_id and a.store_id=c.store_id and " +
+                "c.store_id=#{storeId} and " +
+                "a.deleted=0 and b.deleted=0 and c.deleted=0")
     List<GoodCateStoreVO> selectAllByStoreId(@Param("storeId") Integer storeId);
 
     /**
@@ -94,7 +97,9 @@ public interface GoodMapper extends BaseMapper<Good> {
             "from " +
                 "goods_info as a, goods_category as b, store_info as c " +
             "where " +
-                "a.cate_id = b.cate_id and a.store_id = c.store_id and b.cate_id = #{cateId}")
+                "a.cate_id=b.cate_id and a.store_id=c.store_id and " +
+                "b.cate_id=#{cateId} and " +
+                "a.deleted=0 and b.deleted=0 and c.deleted=0")
     List<GoodCateStoreVO> selectAllByCateId(@Param("cateId") Integer cateId);
 
     /**
@@ -122,7 +127,9 @@ public interface GoodMapper extends BaseMapper<Good> {
             "from " +
                 "goods_info as a, goods_category as b, store_info as c " +
             "where " +
-                "a.cate_id = b.cate_id and a.store_id = c.store_id and c.store_id = #{storeId} and b.cate_id = #{cateId}")
+                "a.cate_id=b.cate_id and a.store_id=c.store_id and " +
+                "c.store_id=#{storeId} and b.cate_id=#{cateId} and " +
+                "a.deleted=0 and b.deleted=0 and c.deleted=0")
     List<GoodCateStoreVO> selectAllByStoreCateId(@Param("storeId") Integer storeId,
                                                  @Param("cateId") Integer cateId);
 
@@ -150,6 +157,8 @@ public interface GoodMapper extends BaseMapper<Good> {
             "from " +
                 "goods_info as a, goods_category as b, store_info as c " +
             "where " +
-                "a.cate_id = b.cate_id and a.store_id = c.store_id and a.good_id = #{id}")
+                "a.cate_id=b.cate_id and a.store_id=c.store_id and " +
+                "a.good_id=#{id} and " +
+                "a.deleted=0 and b.deleted=0 and c.deleted=0")
     GoodCateStoreVO selectById(@Param("id") Integer id);
 }
