@@ -3,12 +3,12 @@ package site.tyheng.wxorderapi.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import site.tyheng.wxorderapi.entity.Category;
+import site.tyheng.wxorderapi.entity.Store;
 
 /**
- *  商品分类的 dao
+ * 商店信息的 mapper
  * @author tangyiheng
  */
 @Repository
-public interface CategoryMapper extends BaseMapper<Category> {
+public interface StoreMapper extends BaseMapper<Store> {
 }
