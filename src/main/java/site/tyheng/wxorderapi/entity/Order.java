@@ -2,8 +2,10 @@ package site.tyheng.wxorderapi.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.List;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName(value = "order_master")
 public class Order {
     /**
@@ -70,5 +74,6 @@ public class Order {
     /**
      * 订单商品列表
      */
-    private List<OrderItem> goods;
+    @TableField(exist = false)
+    private List<OrderItem> orderItems;
 }

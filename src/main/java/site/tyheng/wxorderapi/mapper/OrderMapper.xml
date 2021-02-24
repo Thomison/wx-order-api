@@ -14,7 +14,7 @@
         <result property="payTotalAmount" column="pay_amount_total"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
-        <collection property="goods" ofType="site.tyheng.wxorderapi.entity.OrderItem">
+        <collection property="orderItems" ofType="site.tyheng.wxorderapi.entity.OrderItem">
             <id property="id" column="order_detail_id"/>
             <result property="orderId" column="order_id"/>
             <result property="orderNo" column="order_no"/>
