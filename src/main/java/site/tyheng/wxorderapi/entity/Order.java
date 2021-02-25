@@ -39,17 +39,17 @@ public class Order {
      * 订单总金额
      */
     @TableField(value = "order_amount_total")
-    private Integer orderTotalAmount;
+    private int orderTotalAmount;
     /**
      * 优惠总金额
      */
     @TableField(value = "discount_amount")
-    private Integer discountAmount;
+    private int discountAmount;
     /**
      * 支付总金额
      */
     @TableField(value = "pay_amount_total")
-    private Integer payTotalAmount;
+    private int payTotalAmount;
     /**
      * 记录创建时间
      */

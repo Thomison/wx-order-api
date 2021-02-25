@@ -55,13 +55,8 @@ public class OrderController {
      */
     @PostMapping(value = "/order", produces = "application/json")
     public CommonResult createOrder(@RequestBody JSONObject jsonObject) {
-        System.out.println(jsonObject);
-        // 将字符串解析成json对象
-//        JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
-        // 将json对象解析成order对象
+        // 解析
         Order order = JSONUtil.toBean(jsonObject, Order.class);
-        System.out.println(order);
-
         // 获取用户id
         if (order.getOpenId() == null) {
             return CommonResult.failed("创建订单失败：请先登录");

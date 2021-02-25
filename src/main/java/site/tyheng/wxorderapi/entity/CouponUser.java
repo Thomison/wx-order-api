@@ -1,6 +1,5 @@
 package site.tyheng.wxorderapi.entity;
 
-
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,20 +9,36 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 订单商品 实体类
+ * 用户优惠券领取和使用的记录
+ *
  * @author tangyiheng
  */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "order_detail")
-public class OrderItem {
+@AllArgsConstructor
+@TableName(value = "coupon_user")
+public class CouponUser {
     /**
-     * 主键id
+     * 记录id
      */
-    @TableId(value = "order_detail_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+    /**
+     * 用户id
+     */
+    @TableField(value = "user_id")
+    private Integer userId;
+    /**
+     * 用户openid
+     */
+    @TableField(value = "open_id")
+    private Integer userOpenID;
+    /**
+     * 优惠券id
+     */
+    @TableField(value = "coupon_id")
+    private Integer couponId;
     /**
      * 订单id
      */
@@ -35,20 +50,28 @@ public class OrderItem {
     @TableField(value = "order_no")
     private String orderNo;
     /**
-     * 商品id
+     * 使用状态 0表示未使用 1表示已使用 2表示已过期 3表示已下架
      */
-    @TableField(value = "good_id")
-    private Integer goodId;
+    @TableField(value = "status")
+    private int status;
     /**
-     * 商品数量
+     * 使用时间
      */
-    @TableField(value = "good_num")
-    private int goodNum;
+    @TableField(value = "used_time")
+    private LocalDateTime usedTime;
     /**
-     * 商品价格
+     * 有效期开始时间
      */
-    @TableField(value = "good_price")
-    private int goodPrice;
+    @TableField(value = "start_time")
+    private LocalDateTime startTime;
+    /**
+     * 有效期截止时间
+     */
+    @TableField(value = "end_time")
+    private LocalDateTime endTime;
+
+    /*********************************************************/
+
     /**
      * 记录创建时间
      */
