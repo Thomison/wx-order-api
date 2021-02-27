@@ -51,15 +51,20 @@ public class Order {
     @TableField(value = "order_amount_total")
     private int orderTotalAmount;
     /**
-     * 优惠总金额
+     * 优惠券id
      */
-    @TableField(value = "discount_amount")
-    private int discountAmount;
+    @TableField(value = "coupon_id")
+    private Integer couponId;
     /**
      * 优惠券名称
      */
     @TableField(exist = false)
     private String couponName;
+    /**
+     * 优惠总金额
+     */
+    @TableField(value = "discount_amount")
+    private int discountAmount;
     /**
      * 支付总金额
      */

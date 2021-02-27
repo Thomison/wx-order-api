@@ -20,6 +20,10 @@ import java.util.UUID;
  */
 @RestController
 public class OrderController {
+    /**
+     * 创建订单后的订单状态：待收货-1
+     */
+    final int INIT_STATUS = 1;
 
     @Autowired
     public IUserService userService;
@@ -39,6 +43,12 @@ public class OrderController {
     @Autowired
     public IStoreService storeService;
 
+    @Autowired
+    public ICouponService couponService;
+
+    @Autowired
+    public ICouponUserService couponUserService;
+
     /**
      * 查询所有订单
      */
@@ -51,6 +61,11 @@ public class OrderController {
                     new QueryWrapper<User>().eq("open_id", order.getOpenId())
             );
             order.setUserName(user.getNickName());
+            // 若使用了优惠券 则填充优惠券信息
+            if (order.getCouponId() != null) {
+                Coupon coupon = couponService.getById(order.getCouponId());
+                order.setCouponName(coupon.getCouponName());
+            }
             // 填充商品信息
             for (OrderItem item: order.getOrderItems()) {
                 // 填充商品名称
@@ -91,12 +106,22 @@ public class OrderController {
         if (user.getMoney() < order.getPayTotalAmount()) {
             return CommonResult.failed("创建订单失败：余额不足");
         }
+        // 判断商品库存是否足以承担订单
+        for (OrderItem item : order.getOrderItems()) {
+            // 从数据库查询商品库存
+            Good good = goodService.getById(item.getGoodId());
+            if (good.getStockNum() < item.getGoodNum()) {
+                return CommonResult.failed("创建订单失败：库存不足");
+            }
+        }
         // 刷新用户余额信息
         user.setMoney(user.getMoney() - order.getPayTotalAmount());
         userService.updateById(user);
         // 创建订单编号
         String orderNo = UUID.randomUUID().toString();
         order.setOrderNo(orderNo);
+        // 设置订单状态为待收货
+        order.setOrderStatus(INIT_STATUS);
         // 保存订单主表
         boolean hasSave = orderService.save(order);
         if (!hasSave) {
@@ -113,7 +138,7 @@ public class OrderController {
             item.setCreateTime(orderSaved.getCreateTime());
             item.setUpdateTime(orderSaved.getUpdateTime());
             orderItemService.save(item);
-            // 刷新商品库存及销量信息
+            // 刷新商品销量及库存信息
             Good good = goodService.getById(item.getGoodId());
             good.setSaleNum(good.getSaleNum() + item.getGoodNum());
             good.setStockNum(good.getStockNum() - item.getGoodNum());
