@@ -31,10 +31,20 @@ public class Order {
     @TableField(value = "open_id")
     private String openId;
     /**
+     * 用户昵称
+     */
+    @TableField(exist = false)
+    private String userName;
+    /**
      * 订单编号
      */
     @TableField(value = "order_no")
     private String orderNo;
+    /**
+     * 订单状态
+     */
+    @TableField(value = "order_status")
+    private Integer orderStatus;
     /**
      * 订单总金额
      */
@@ -45,6 +55,11 @@ public class Order {
      */
     @TableField(value = "discount_amount")
     private int discountAmount;
+    /**
+     * 优惠券名称
+     */
+    @TableField(exist = false)
+    private String couponName;
     /**
      * 支付总金额
      */

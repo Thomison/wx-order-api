@@ -15,6 +15,7 @@ import site.tyheng.wxorderapi.utils.CommonResult;
 import site.tyheng.wxorderapi.utils.WeChatUtil;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -94,4 +95,43 @@ public class UserController {
         return CommonResult.success(jsonObject, "登陆成功");
     }
 
+
+    /**
+     * 查询所有用户信息
+     */
+    @GetMapping("/users")
+    public CommonResult getAllUser() {
+        List<User> userList = userService.list();
+        if (userList == null) {
+            return CommonResult.failed("查询失败");
+        } else {
+            return CommonResult.success(userList, "查询成功");
+        }
+    }
+
+    /**
+     * 更新用户信息
+     */
+    @PutMapping("/user")
+    public CommonResult updateUser(@RequestBody User user) {
+        boolean hasUpdate = userService.updateById(user);
+        if (hasUpdate) {
+            return CommonResult.success(null, "更新成功");
+        } else {
+            return CommonResult.failed("更新失败");
+        }
+    }
+
+    /**
+     * 删除用户信息
+     */
+    @DeleteMapping("/user/{id}")
+    public CommonResult removeUser(@PathVariable(value = "id") Integer id) {
+        boolean hasRemove = userService.removeById(id);
+        if (hasRemove) {
+            return CommonResult.success(null, "删除成功");
+        } else {
+            return CommonResult.failed("删除失败");
+        }
+    }
 }

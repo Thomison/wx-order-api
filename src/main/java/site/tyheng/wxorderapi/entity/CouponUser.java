@@ -52,8 +52,8 @@ public class CouponUser {
     /**
      * 使用状态 0表示未使用 1表示已使用 2表示已过期 3表示已下架
      */
-    @TableField(value = "status")
-    private int status;
+    @TableField(value = "coupon_status")
+    private Integer couponStatus;
     /**
      * 使用时间
      */

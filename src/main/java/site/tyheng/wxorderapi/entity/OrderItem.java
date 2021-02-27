@@ -40,6 +40,21 @@ public class OrderItem {
     @TableField(value = "good_id")
     private Integer goodId;
     /**
+     * 商品名称
+     */
+    @TableField(exist = false)
+    private String goodName;
+    /**
+     * 商品所属分类
+     */
+    @TableField(exist = false)
+    private String cateName;
+    /**
+     * 商品所属店铺
+     */
+    @TableField(exist = false)
+    private String storeName;
+    /**
      * 商品数量
      */
     @TableField(value = "good_num")

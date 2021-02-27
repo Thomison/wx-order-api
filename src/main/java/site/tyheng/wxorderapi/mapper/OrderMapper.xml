@@ -9,6 +9,7 @@
         <id property="id" column="order_id"/>
         <result property="openId" column="open_id"/>
         <result property="orderNo" column="order_no"/>
+        <result property="orderStatus" column="order_status"/>
         <result property="orderTotalAmount" column="order_amount_total"/>
         <result property="discountAmount" column="discount_amount"/>
         <result property="payTotalAmount" column="pay_amount_total"/>
@@ -31,6 +32,7 @@
             master.order_id as order_id,
             master.open_id as open_id,
             master.order_no as order_no,
+            master.order_status as order_status,
             master.order_amount_total as order_amount_total,
             master.discount_amount as discount_amount,
             master.pay_amount_total as pay_amount_total,
