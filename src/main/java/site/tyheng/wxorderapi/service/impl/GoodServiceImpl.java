@@ -40,7 +40,7 @@ public class GoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements IG
 
     @Override
     public GoodCateStoreVO getOneById(Integer id) {
-        return this.baseMapper.selectById(id);
+        return this.baseMapper.selectByGoodId(id);
     }
 
 

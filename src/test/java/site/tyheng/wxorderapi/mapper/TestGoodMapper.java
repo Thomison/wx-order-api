@@ -24,7 +24,7 @@ public class TestGoodMapper {
 //        List<GoodCateStoreVO> voList = goodMapper.selectAll();
 //        log.info("{}", voList);
         // 根据id查询单条
-        GoodCateStoreVO vo = goodMapper.selectById(1);
-        log.info("{}", vo);
+//        GoodCateStoreVO vo = goodMapper.selectById(1);
+//        log.info("{}", vo);
     }
 }

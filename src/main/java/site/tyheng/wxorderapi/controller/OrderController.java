@@ -70,15 +70,32 @@ public class OrderController {
             }
             // 填充商品信息
             for (OrderItem item: order.getOrderItems()) {
-                // 填充商品名称
                 GoodCateStoreVO vo = goodService.getOneById(item.getGoodId());
+                // 填充商品名称
                 item.setGoodName(vo.getGoodName());
+                // 填充商品图片
+                item.setGoodImageUrl(vo.getGoodImageUrl());
                 // 填充商品所属分类
                 item.setCateName(vo.getCateName());
                 // 填充商品所属店铺
                 item.setStoreName(vo.getStoreName());
             }
         }
+        if (orderList == null) {
+            return CommonResult.failed("查询失败");
+        } else {
+            return CommonResult.success(orderList, "查询成功");
+        }
+    }
+
+    /**
+     * 查询用户的订单信息
+     */
+    @GetMapping("/orders/{openid}")
+    public CommonResult getUserAllOrders(@PathVariable(value = "openid") String openid) {
+        List<Order> orderList = orderService.list(
+                new QueryWrapper<Order>().eq("open_id", openid)
+        );
         if (orderList == null) {
             return CommonResult.failed("查询失败");
         } else {

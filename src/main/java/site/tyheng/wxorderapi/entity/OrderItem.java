@@ -45,6 +45,11 @@ public class OrderItem {
     @TableField(exist = false)
     private String goodName;
     /**
+     * 商品图片
+     */
+    @TableField(exist = false)
+    private String goodImageUrl;
+    /**
      * 商品所属分类
      */
     @TableField(exist = false)

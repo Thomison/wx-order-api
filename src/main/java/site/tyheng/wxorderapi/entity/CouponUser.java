@@ -33,7 +33,7 @@ public class CouponUser {
      * 用户openid
      */
     @TableField(value = "open_id")
-    private Integer userOpenID;
+    private String userOpenID;
     /**
      * 优惠券id
      */

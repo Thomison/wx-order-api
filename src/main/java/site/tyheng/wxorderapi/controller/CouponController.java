@@ -105,13 +105,14 @@ public class CouponController {
         }
         if (coupon.getTotal() < 0) {
             return CommonResult.failed("领取失败：优惠券已被领光");
-        }
-        // 更新优惠券数量
-        if (coupon.getTotal() == 1) {
+        } else if (coupon.getTotal() == 1) {
+            // 设置优惠券领取完毕
             coupon.setTotal(-1);
-        } else {
+        } else if (coupon.getTotal() > 1) {
+            // 更新优惠券数量
             coupon.setTotal(coupon.getTotal() - 1);
         }
+
         // 更新优惠券信息回数据库
         couponService.updateById(coupon);
 
@@ -138,11 +139,11 @@ public class CouponController {
             JSONObject jsonObject = JSONUtil.parseObj(couponUser);
             // 构造用户领取优惠券的信息
             Coupon coupon = couponService.getById(couponUser.getCouponId());
-            jsonObject.append("couponName", coupon.getCouponName());
-            jsonObject.append("couponDesc", coupon.getCouponDesc());
-            jsonObject.append("couponMin", coupon.getCouponMin());
-            jsonObject.append("discount", coupon.getDiscount());
-            jsonObject.append("goodsType", coupon.getGoodsType());
+            jsonObject.set("couponName", coupon.getCouponName());
+            jsonObject.set("couponDesc", coupon.getCouponDesc());
+            jsonObject.set("couponMin", coupon.getCouponMin());
+            jsonObject.set("discount", coupon.getDiscount());
+            jsonObject.set("goodsType", coupon.getGoodsType());
             result.add(jsonObject);
         }
 
@@ -152,4 +153,5 @@ public class CouponController {
             return CommonResult.success(result, "查询成功");
         }
     }
+
 }

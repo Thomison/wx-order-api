@@ -160,5 +160,5 @@ public interface GoodMapper extends BaseMapper<Good> {
                 "a.cate_id=b.cate_id and a.store_id=c.store_id and " +
                 "a.good_id=#{id} and " +
                 "a.deleted=0 and b.deleted=0 and c.deleted=0")
-    GoodCateStoreVO selectById(@Param("id") Integer id);
+    GoodCateStoreVO selectByGoodId(@Param("id") Integer id);
 }

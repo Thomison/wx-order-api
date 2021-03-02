@@ -89,9 +89,9 @@ public class UserController {
         // 构造返回结果
         JSONObject jsonObject = new JSONObject();
         // 会话key
-        jsonObject.append("skey", skey);
+        jsonObject.set("skey", skey);
         // 用户唯一认证id
-        jsonObject.append("openid", user.getOpenId());
+        jsonObject.set("openid", user.getOpenId());
         return CommonResult.success(jsonObject, "登陆成功");
     }
 

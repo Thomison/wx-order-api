@@ -41,7 +41,7 @@ public class Order {
     @TableField(value = "order_no")
     private String orderNo;
     /**
-     * 订单状态
+     * 订单状态 0:待付款 1:待收货 2:已完成 3:已取消
      */
     @TableField(value = "order_status")
     private Integer orderStatus;
