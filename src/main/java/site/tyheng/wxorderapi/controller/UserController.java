@@ -110,6 +110,21 @@ public class UserController {
     }
 
     /**
+     * 查询指定用户信息
+     */
+    @GetMapping("/user/{openid}")
+    public CommonResult getAllUser(@PathVariable(value = "openid") String openid) {
+        User user = userService.getOne(
+                new QueryWrapper<User>().eq("open_id", openid)
+        );
+        if (user == null) {
+            return CommonResult.failed("查询失败");
+        } else {
+            return CommonResult.success(user, "查询成功");
+        }
+    }
+
+    /**
      * 更新用户信息
      */
     @PutMapping("/user")
