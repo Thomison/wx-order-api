@@ -16,11 +16,11 @@ public class TestStoreService {
     @Autowired
     public IStoreService storeService;
 
-    @Test
-    public void testInsert() {
-        Store a = Store.builder().name("店铺A").build();
-        Store b = Store.builder().name("店铺B").build();
-        Store c = Store.builder().name("店铺C").build();
-        boolean hasSave = storeService.saveBatch(Arrays.asList(a, b, c));
-    }
+//    @Test
+//    public void testInsert() {
+//        Store a = Store.builder().name("店铺A").build();
+//        Store b = Store.builder().name("店铺B").build();
+//        Store c = Store.builder().name("店铺C").build();
+//        boolean hasSave = storeService.saveBatch(Arrays.asList(a, b, c));
+//    }
 }

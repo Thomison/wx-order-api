@@ -39,6 +39,6 @@ public class TestGoodService {
 //        List<GoodCateStoreVO> voList = goodService.listByCateId(1);
 
         // 根据商家和分类查询列表
-        List<GoodCateStoreVO> voList = goodService.listByStoreCateId(1, 1);
+//        List<GoodCateStoreVO> voList = goodService.listByStoreCateId(1, 1);
     }
 }

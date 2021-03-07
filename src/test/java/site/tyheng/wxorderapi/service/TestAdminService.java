@@ -17,10 +17,10 @@ public class TestAdminService {
     /**
      * 测试 通过用户名查找用户
      */
-    @Test
-    public void test() {
-        QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
-        Admin admin = adminService.getOne(
-                queryWrapper.eq("login_name", "唐以恒"), false);
-    }
+//    @Test
+//    public void test() {
+//        QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
+//        Admin admin = adminService.getOne(
+//                queryWrapper.eq("login_name", "唐以恒"), false);
+//    }
 }

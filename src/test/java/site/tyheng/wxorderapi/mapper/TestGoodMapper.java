@@ -17,14 +17,14 @@ public class TestGoodMapper {
     @Autowired
     public GoodMapper goodMapper;
 
-    @Test
-    public void testSelect() {
-//        List<Good> goodList = goodMapper.selectList(null);
-        // 查询全部
-//        List<GoodCateStoreVO> voList = goodMapper.selectAll();
-//        log.info("{}", voList);
-        // 根据id查询单条
-//        GoodCateStoreVO vo = goodMapper.selectById(1);
-//        log.info("{}", vo);
-    }
+//    @Test
+//    public void testSelect() {
+////        List<Good> goodList = goodMapper.selectList(null);
+//        // 查询全部
+////        List<GoodCateStoreVO> voList = goodMapper.selectAll();
+////        log.info("{}", voList);
+//        // 根据id查询单条
+////        GoodCateStoreVO vo = goodMapper.selectById(1);
+////        log.info("{}", vo);
+//    }
 }

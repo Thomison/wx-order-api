@@ -11,8 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class TestOrderMapper {
     @Autowired
     public OrderMapper orderMapper;
-    @Test
-    public void test() {
-        orderMapper.getOrders();
-    }
+//    @Test
+//    public void test() {
+//        orderMapper.getOrders();
+//    }
 }

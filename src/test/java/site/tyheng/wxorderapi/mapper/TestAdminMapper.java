@@ -19,25 +19,25 @@ public class TestAdminMapper {
      *  测试插入新纪录
      *  插入重复用户名的记录将会导致插入失败
      */
-    @Test
-    public void testInsert() {
-        Admin admin = Admin.builder()
-                .name("唐以恒")
-                .password("123456")
-                .build();
-        adminMapper.insert(admin);
-    }
+//    @Test
+//    public void testInsert() {
+//        Admin admin = Admin.builder()
+//                .name("唐以恒")
+//                .password("123456")
+//                .build();
+//        adminMapper.insert(admin);
+//    }
 
     /**
      * 测试根据用户名查找用户
      */
-    @Test
-    public void testSelect() {
-        QueryWrapper<Admin> wrapper = new QueryWrapper<>();
-        Admin admin = adminMapper.selectOne(
-                wrapper.eq("login_name", "唐以恒"));
-        log.info("查询结果：{}", admin);
-    }
+//    @Test
+//    public void testSelect() {
+//        QueryWrapper<Admin> wrapper = new QueryWrapper<>();
+//        Admin admin = adminMapper.selectOne(
+//                wrapper.eq("login_name", "唐以恒"));
+//        log.info("查询结果：{}", admin);
+//    }
 
 
 }
