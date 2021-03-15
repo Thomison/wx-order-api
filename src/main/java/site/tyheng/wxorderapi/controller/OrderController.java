@@ -64,8 +64,11 @@ public class OrderController {
             order.setUserName(user.getNickName());
             // 若使用了优惠券 则填充优惠券信息
             if (order.getCouponUserId() != null) {
+                // 查询用户领取的优惠券
                 CouponUser couponUser = couponUserService.getById(order.getCouponUserId());
+                // 查询优惠券信息
                 Coupon coupon = couponService.getById(couponUser.getCouponId());
+                // 填充优惠券名称
                 order.setCouponName(coupon.getCouponName());
             }
             // 填充商品信息
@@ -143,7 +146,7 @@ public class OrderController {
         order.setOrderNo(orderNo);
         // 设置订单状态为 待收货
         order.setOrderStatus(1);
-        // 持久化订单主表到数据库
+        // 保存订单主表
         boolean hasSave = orderService.save(order);
         if (!hasSave) {
             return CommonResult.failed("创建订单失败");
@@ -154,17 +157,19 @@ public class OrderController {
                 new QueryWrapper<Order>().eq("order_no", orderNo)
         );
 
-        // 查询本次订单中用户使用的优惠券信息
+        // 如果用户使用了优惠券 则更新用户的优惠券信息
         CouponUser couponUser = couponUserService.getById(order.getCouponUserId());
-        // 设置订单信息
-        couponUser.setOrderId(orderSaved.getId());
-        couponUser.setOrderNo(orderNo);
-        // 设置优惠券状态为已使用
-        couponUser.setCouponStatus(1);
-        // 设置优惠券使用时间
-        couponUser.setUsedTime(LocalDateTime.now());
-        // 更新用户优惠券信息
-        couponUserService.updateById(couponUser);
+        if (couponUser != null) {
+            // 设置订单信息
+            couponUser.setOrderId(orderSaved.getId());
+            couponUser.setOrderNo(orderNo);
+            // 设置优惠券状态为已使用
+            couponUser.setCouponStatus(1);
+            // 设置优惠券使用时间
+            couponUser.setUsedTime(LocalDateTime.now());
+            // 更新用户优惠券信息
+            couponUserService.updateById(couponUser);
+        }
 
         // 获取订单产品列表
         for (OrderItem item : order.getOrderItems()) {
@@ -181,6 +186,7 @@ public class OrderController {
             good.setStockNum(good.getStockNum() - item.getGoodNum());
             goodService.updateById(good);
         }
+
         // 返回订单编号
         return CommonResult.success(orderNo, "创建订单成功");
     }

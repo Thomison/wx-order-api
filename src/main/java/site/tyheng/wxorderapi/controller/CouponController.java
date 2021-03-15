@@ -10,6 +10,7 @@ import site.tyheng.wxorderapi.entity.CouponUser;
 import site.tyheng.wxorderapi.entity.User;
 import site.tyheng.wxorderapi.service.ICouponService;
 import site.tyheng.wxorderapi.service.ICouponUserService;
+import site.tyheng.wxorderapi.service.IStoreService;
 import site.tyheng.wxorderapi.service.IUserService;
 import site.tyheng.wxorderapi.utils.CommonResult;
 
@@ -33,16 +34,25 @@ public class CouponController {
     @Autowired
     public IUserService userService;
 
+    @Autowired
+    public IStoreService storeService;
+
     /**
      * 查询所有优惠券信息
      */
     @GetMapping("/coupons")
     public CommonResult getAllCoupons() {
         List<Coupon> couponList = couponService.list();
+        List<JSONObject> result = new ArrayList<>();
+        for (Coupon coupon: couponList) {
+            JSONObject jsonObject = JSONUtil.parseObj(coupon);
+            jsonObject.set("storeName", storeService.getById(coupon.getStoreId()).getName());
+            result.add(jsonObject);
+        }
         if (couponList == null) {
             return CommonResult.failed("查询失败");
         } else {
-            return CommonResult.success(couponList, "查询成功");
+            return CommonResult.success(result, "查询成功");
         }
     }
 
@@ -143,7 +153,8 @@ public class CouponController {
             jsonObject.set("couponDesc", coupon.getCouponDesc());
             jsonObject.set("couponMin", coupon.getCouponMin());
             jsonObject.set("discount", coupon.getDiscount());
-            jsonObject.set("goodsType", coupon.getGoodsType());
+            jsonObject.set("storeId", coupon.getStoreId());
+            jsonObject.set("storeName", storeService.getById(coupon.getStoreId()).getName());
             result.add(jsonObject);
         }
 

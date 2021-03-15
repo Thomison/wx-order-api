@@ -36,6 +36,11 @@ public class Coupon {
     @TableField(value = "coupon_desc")
     private String couponDesc;
     /**
+     * 店铺id
+     */
+    @TableField(value = "store_id")
+    private Integer storeId;
+    /**
      * t 如果为0 表示不限量领取
      */
     @TableField(value = "total")
@@ -60,11 +65,13 @@ public class Coupon {
      */
     @TableField(value = "coupon_status")
     private Integer couponStatus;
-    /**
-     * 商品限制类型 0表示全商品 1表示类目限制 2表示商品限制
-     */
-    @TableField(value = "goods_type")
-    private Integer goodsType;
+
+//    /**
+//     * 商品限制类型 0表示全商品 1表示类目限制 2表示商品限制
+//     */
+//    @TableField(value = "goods_type")
+//    private Integer goodsType;
+
     /**
      * 有限时间限制 0表示基于领取时间的有效天数 1表示从start_time到end_time的有效天数
      */
