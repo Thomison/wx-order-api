@@ -50,16 +50,16 @@ public class Order {
      */
     @TableField(value = "order_amount_total")
     private int orderTotalAmount;
-    /**
-     * 用户优惠券id
-     */
-    @TableField(value = "coupon_user_id")
-    private Integer couponUserId;
-    /**
-     * 优惠券名称
-     */
-    @TableField(exist = false)
-    private String couponName;
+//    /**
+//     * 用户优惠券id
+//     */
+//    @TableField(value = "coupon_user_id")
+//    private Integer couponUserId;
+//    /**
+//     * 优惠券名称
+//     */
+//    @TableField(exist = false)
+//    private String couponName;
     /**
      * 优惠总金额
      */

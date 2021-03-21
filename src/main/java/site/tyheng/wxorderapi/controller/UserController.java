@@ -32,6 +32,11 @@ public class UserController {
     public IUserService userService;
 
     /**
+     * 用户初始金额
+     */
+    public final int USER_INIT_MONEY = 50;
+
+    /**
      * 处理用户登录的post请求
      *
      * @param param
@@ -74,7 +79,7 @@ public class UserController {
                     .province(rawDataJson.get("province", String.class))
                     .city(rawDataJson.get("city", String.class))
                     .confuse(true)
-                    .money(100)
+                    .money(USER_INIT_MONEY)
                     .lastVisitTime(LocalDateTime.now())
                     .build();
             // 在数据库中保存用户个人信息

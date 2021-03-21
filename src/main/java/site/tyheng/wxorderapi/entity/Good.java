@@ -31,25 +31,15 @@ public class Good {
     @TableField(value = "good_image_url")
     private String imageUrl;
     /**
-     * 商品原始价格
-     */
-    @TableField(value = "good_old_price")
-    private Integer oldPrice;
-    /**
      * 商品当前价格
      */
-    @TableField(value = "good_new_price")
-    private Integer newPrice;
+    @TableField(value = "good_price")
+    private Integer price;
     /**
      * 商品销量
      */
     @TableField(value = "good_sale_num")
     private Integer saleNum;
-    /**
-     * 商品库存
-     */
-    @TableField(value = "good_stock")
-    private Integer stockNum;
     /**
      * 商品所属分类的id
      */

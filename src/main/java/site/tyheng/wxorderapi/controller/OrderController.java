@@ -1,6 +1,7 @@
 package site.tyheng.wxorderapi.controller;
 
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -12,6 +13,8 @@ import site.tyheng.wxorderapi.service.*;
 import site.tyheng.wxorderapi.utils.CommonResult;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,30 +60,22 @@ public class OrderController {
     public CommonResult getAllOrders() {
         List<Order> orderList = orderService.listAll();
         for(Order order: orderList) {
-            // 填充用户昵称
+            // 填充用户信息
             User user = userService.getOne(
                     new QueryWrapper<User>().eq("open_id", order.getOpenId())
             );
+            // 用户昵称
             order.setUserName(user.getNickName());
-            // 若使用了优惠券 则填充优惠券信息
-            if (order.getCouponUserId() != null) {
-                // 查询用户领取的优惠券
-                CouponUser couponUser = couponUserService.getById(order.getCouponUserId());
-                // 查询优惠券信息
-                Coupon coupon = couponService.getById(couponUser.getCouponId());
-                // 填充优惠券名称
-                order.setCouponName(coupon.getCouponName());
-            }
             // 填充商品信息
             for (OrderItem item: order.getOrderItems()) {
                 GoodCateStoreVO vo = goodService.getOneById(item.getGoodId());
-                // 填充商品名称
+                // 商品名称
                 item.setGoodName(vo.getGoodName());
-                // 填充商品图片
+                // 商品图片
                 item.setGoodImageUrl(vo.getGoodImageUrl());
-                // 填充商品所属分类
+                // 商品所属分类
                 item.setCateName(vo.getCateName());
-                // 填充商品所属店铺
+                // 商品所属店铺
                 item.setStoreName(vo.getStoreName());
             }
         }
@@ -92,7 +87,7 @@ public class OrderController {
     }
 
     /**
-     * 查询用户的订单信息
+     * 查询用户的所有主订单信息
      */
     @GetMapping("/orders/{openid}")
     public CommonResult getUserAllOrders(@PathVariable(value = "openid") String openid) {
@@ -111,84 +106,104 @@ public class OrderController {
      */
     @PostMapping(value = "/order", produces = "application/json")
     public CommonResult createOrder(@RequestBody JSONObject jsonObject) {
-        // 解析
-        Order order = JSONUtil.toBean(jsonObject, Order.class);
+        // 解析Json
+        String openId = jsonObject.get("openId", String.class);
+        OrderItem[] orderItems = (OrderItem[]) jsonObject.getJSONArray("orderItems").toArray();
+        Integer[] coupons = (Integer[]) jsonObject.getJSONArray("coupons").toArray();
+
         // 获取用户id
-        if (order.getOpenId() == null) {
+        if (openId == null || openId.equals("")) {
             return CommonResult.failed("创建订单失败：请先登录");
         }
         // 根据用户id查找用户
-        User user = userService.getOne(
-                new QueryWrapper<User>().eq("open_id", order.getOpenId())
-        );
+        User user = userService.getOne(new QueryWrapper<User>().eq("open_id", openId));
         if (user == null) {
             return CommonResult.failed("创建订单失败：不存在该用户");
         }
-        // 判断用户余额是否足以支付订单
-        if (user.getMoney() < order.getPayTotalAmount()) {
-            return CommonResult.failed("创建订单失败：余额不足");
+
+        // 订单创建时间
+        LocalDateTime orderCreateTime = LocalDateTime.now();
+        // 计算订单总价格 并 创建订单子表
+        int total = 0;
+        List<Integer> goodIdList = new ArrayList<>();
+        for (OrderItem item : orderItems) {
+            total += item.getGoodPrice() * item.getGoodNum();
+            goodIdList.add(item.getGoodId());
         }
-        // 判断商品库存是否足以承担订单
-        for (OrderItem item : order.getOrderItems()) {
-            // 从数据库查询商品库存
-            Good good = goodService.getById(item.getGoodId());
-            if (good.getStockNum() < item.getGoodNum()) {
-                return CommonResult.failed("创建订单失败：库存不足");
+        // 计算优惠金额
+        int discount = 0;
+        for (Integer id : coupons) {
+            CouponUser couponUser = couponUserService.getById(id);
+            Coupon coupon = couponService.getById(couponUser.getCouponId());
+            if (orderCreateTime.isBefore(couponUser.getEndTime())) {
+                // 优惠券在有效期内
+                if (coupon.getGoodId() == 0 && total >= coupon.getCouponMin()) {
+                    // 店铺满减优惠券
+                    discount += coupon.getDiscount();
+                } else if (coupon.getGoodId() != 0 && goodIdList.contains(coupon.getGoodId())) {
+                    // 指定商品优惠券
+                    discount += coupon.getDiscount();
+                }
             }
         }
-        // 刷新用户余额信息
-        user.setMoney(user.getMoney() - order.getPayTotalAmount());
-        // 更新用户信息回数据库
-        userService.updateById(user);
-
-        // 创建订单编号
-        String orderNo = UUID.randomUUID().toString();
-        order.setOrderNo(orderNo);
-        // 设置订单状态为 待收货
-        order.setOrderStatus(1);
-        // 保存订单主表
-        boolean hasSave = orderService.save(order);
-        if (!hasSave) {
+        if (user.getMoney() < (total - discount)) {
+            return CommonResult.failed("创建订单失败：余额不足");
+        }
+        // 创建订单
+        Order order = Order.builder()
+                .openId(openId)
+                .userName(user.getNickName())
+                .orderNo(UUID.randomUUID().toString())
+                .orderStatus(INIT_STATUS)
+                .orderTotalAmount(total)
+                .discountAmount(discount)
+                .payTotalAmount(total - discount)
+                .build();
+        // 保存订单
+        boolean hasSaveOrder = orderService.save(order);
+        if (!hasSaveOrder) {
             return CommonResult.failed("创建订单失败");
         }
-
-        // 根据订单编号查询订单主表
-        Order orderSaved = orderService.getOne(
-                new QueryWrapper<Order>().eq("order_no", orderNo)
-        );
-
-        // 如果用户使用了优惠券 则更新用户的优惠券信息
-        CouponUser couponUser = couponUserService.getById(order.getCouponUserId());
-        if (couponUser != null) {
-            // 设置订单信息
-            couponUser.setOrderId(orderSaved.getId());
-            couponUser.setOrderNo(orderNo);
-            // 设置优惠券状态为已使用
-            couponUser.setCouponStatus(1);
-            // 设置优惠券使用时间
-            couponUser.setUsedTime(LocalDateTime.now());
-            // 更新用户优惠券信息
+        // 更新用户账户余额
+        user.setMoney(user.getMoney() - order.getPayTotalAmount());
+        boolean hasUpdateUser = userService.updateById(user);
+        if (!hasUpdateUser) {
+            return CommonResult.failed("更新用户账户余额失败");
+        }
+        // 更新优惠券信息
+        for (Integer id : coupons) {
+            CouponUser couponUser = couponUserService.getById(id);
+            Coupon coupon = couponService.getById(couponUser.getCouponId());
+            if (orderCreateTime.isBefore(couponUser.getEndTime())) {
+                // 优惠券在有效期内
+                if ((coupon.getGoodId() == 0 && total >= coupon.getCouponMin())
+                    || (coupon.getGoodId() != 0 && goodIdList.contains(coupon.getGoodId()))) {
+                    // 设置优惠券使用时间、状态已使用
+                    couponUser.setUsedTime(orderCreateTime);
+                    couponUser.setCouponStatus(1);
+                }
+            } else {
+                // 设置优惠券状态已过期
+                couponUser.setCouponStatus(2);
+            }
+            couponUser.setOrderId(order.getId());
+            couponUser.setOrderNo(order.getOrderNo());
             couponUserService.updateById(couponUser);
         }
-
-        // 获取订单产品列表
-        for (OrderItem item : order.getOrderItems()) {
-            // 持久化订单从表到数据库
-            item.setOrderId(orderSaved.getId());
-            item.setOrderNo(orderSaved.getOrderNo());
-            item.setCreateTime(orderSaved.getCreateTime());
-            item.setUpdateTime(orderSaved.getUpdateTime());
+        // 保存订单附表
+        for (OrderItem item : orderItems) {
+            item.setOrderId(order.getId());
+            item.setOrderNo(order.getOrderNo());
+            item.setCreateTime(orderCreateTime);
+            item.setUpdateTime(orderCreateTime);
             orderItemService.save(item);
-
-            // 刷新商品信息(销量,库存)回数据库
+            // 更新商品信息
             Good good = goodService.getById(item.getGoodId());
             good.setSaleNum(good.getSaleNum() + item.getGoodNum());
-            good.setStockNum(good.getStockNum() - item.getGoodNum());
             goodService.updateById(good);
         }
-
         // 返回订单编号
-        return CommonResult.success(orderNo, "创建订单成功");
+        return CommonResult.success(order.getOrderNo(), "创建订单成功");
     }
 
     /**

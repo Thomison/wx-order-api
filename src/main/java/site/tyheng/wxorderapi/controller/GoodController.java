@@ -97,8 +97,7 @@ public class GoodController {
     @PostMapping("/good")
     public CommonResult add(@RequestBody Good good) {
         // 先查询商品是否存在
-        Good one = goodService.getOne(
-                new QueryWrapper<Good>().eq("good_name", good.getName()));
+        Good one = goodService.getById(good.getId());
         if (one != null) {
             // 商品已存在
             return CommonResult.failed("创建失败：商品已存在");

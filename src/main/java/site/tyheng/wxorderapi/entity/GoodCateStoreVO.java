@@ -16,11 +16,8 @@ public class GoodCateStoreVO {
     private Integer goodId;
     private String goodName;
     private String goodImageUrl;
-    private String goodDescribe;
-    private Integer goodOldPrice;
-    private Integer goodNewPrice;
+    private Integer goodPrice;
     private Integer goodSaleNum;
-    private Integer goodStock;
     private Integer cateId;
     private String cateName;
     private Integer storeId;

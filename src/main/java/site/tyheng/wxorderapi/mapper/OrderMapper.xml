@@ -11,7 +11,7 @@
         <result property="orderNo" column="order_no"/>
         <result property="orderStatus" column="order_status"/>
         <result property="orderTotalAmount" column="order_amount_total"/>
-        <result property="couponUserId" column="coupon_user_id"/>
+<!--        <result property="couponUserId" column="coupon_user_id"/>-->
         <result property="discountAmount" column="discount_amount"/>
         <result property="payTotalAmount" column="pay_amount_total"/>
         <result property="createTime" column="create_time"/>
@@ -35,7 +35,7 @@
             master.order_no as order_no,
             master.order_status as order_status,
             master.order_amount_total as order_amount_total,
-            master.coupon_user_id as coupon_user_id,
+#             master.coupon_user_id as coupon_user_id,
             master.discount_amount as discount_amount,
             master.pay_amount_total as pay_amount_total,
             master.create_time as create_time,

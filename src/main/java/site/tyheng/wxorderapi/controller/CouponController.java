@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import site.tyheng.wxorderapi.entity.Coupon;
 import site.tyheng.wxorderapi.entity.CouponUser;
 import site.tyheng.wxorderapi.entity.User;
-import site.tyheng.wxorderapi.service.ICouponService;
-import site.tyheng.wxorderapi.service.ICouponUserService;
-import site.tyheng.wxorderapi.service.IStoreService;
-import site.tyheng.wxorderapi.service.IUserService;
+import site.tyheng.wxorderapi.service.*;
 import site.tyheng.wxorderapi.utils.CommonResult;
 
 import java.time.LocalDateTime;
@@ -36,6 +33,9 @@ public class CouponController {
 
     @Autowired
     public IStoreService storeService;
+
+    @Autowired
+    public IGoodService goodService;
 
     /**
      * 查询所有优惠券信息
@@ -108,7 +108,7 @@ public class CouponController {
         if (user == null) {
             return CommonResult.failed("领取失败：用户不存在");
         }
-        // 查询优惠券
+        // 查询并更新优惠券信息
         Coupon coupon = couponService.getById(couponUser.getCouponId());
         if (coupon == null) {
             return CommonResult.failed("领取失败：优惠券不存在");
@@ -120,10 +120,8 @@ public class CouponController {
             coupon.setTotal(-1);
         } else if (coupon.getTotal() > 1) {
             // 更新优惠券数量
-            coupon.setTotal(coupon.getTotal() - 1);
+            coupon.setTotal(coupon.getTotal()-1);
         }
-
-        // 更新优惠券信息回数据库
         couponService.updateById(coupon);
 
         // 保存用户领取优惠券信息
@@ -132,7 +130,7 @@ public class CouponController {
         couponUser.setCouponStatus(0);
         // 设置优惠券的有效时间
         couponUser.setStartTime(LocalDateTime.now());
-        couponUser.setEndTime(couponUser.getStartTime().plusDays(coupon.getDays()));
+        couponUser.setEndTime(couponUser.getStartTime().plusSeconds(coupon.getSeconds()));
         couponUserService.save(couponUser);
 
         return CommonResult.success(null, "领取成功");
@@ -154,7 +152,13 @@ public class CouponController {
             jsonObject.set("couponMin", coupon.getCouponMin());
             jsonObject.set("discount", coupon.getDiscount());
             jsonObject.set("storeId", coupon.getStoreId());
-            jsonObject.set("storeName", storeService.getById(coupon.getStoreId()).getName());
+            if (coupon.getStoreId() != 0) {
+                jsonObject.set("storeName", storeService.getById(coupon.getStoreId()).getName());
+            }
+            jsonObject.set("goodId", coupon.getStoreId());
+            if (coupon.getGoodId() != 0) {
+                jsonObject.set("goodName", goodService.getById(coupon.getGoodId()).getName());
+            }
             result.add(jsonObject);
         }
 

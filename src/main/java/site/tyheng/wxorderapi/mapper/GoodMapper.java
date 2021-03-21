@@ -27,11 +27,8 @@ public interface GoodMapper extends BaseMapper<Good> {
                 "a.good_id, " +
                 "a.good_name, " +
                 "a.good_image_url, " +
-                "a.good_describe, " +
-                "a.good_old_price, " +
-                "a.good_new_price, " +
+                "a.good_price, " +
                 "a.good_sale_num, " +
-                "a.good_stock, " +
                 "b.cate_id, " +
                 "b.cate_name, " +
                 "c.store_id, " +
@@ -55,11 +52,8 @@ public interface GoodMapper extends BaseMapper<Good> {
                 "a.good_id, " +
                 "a.good_name, " +
                 "a.good_image_url, " +
-                "a.good_describe, " +
-                "a.good_old_price, " +
-                "a.good_new_price, " +
+                "a.good_price, " +
                 "a.good_sale_num, " +
-                "a.good_stock, " +
                 "b.cate_id, " +
                 "b.cate_name, " +
                 "c.store_id, " +
@@ -83,11 +77,8 @@ public interface GoodMapper extends BaseMapper<Good> {
                 "a.good_id, " +
                 "a.good_name, " +
                 "a.good_image_url, " +
-                "a.good_describe, " +
-                "a.good_old_price, " +
-                "a.good_new_price, " +
+                "a.good_price, " +
                 "a.good_sale_num, " +
-                "a.good_stock, " +
                 "b.cate_id, " +
                 "b.cate_name, " +
                 "c.store_id, " +
@@ -113,11 +104,8 @@ public interface GoodMapper extends BaseMapper<Good> {
                 "a.good_id, " +
                 "a.good_name, " +
                 "a.good_image_url, " +
-                "a.good_describe, " +
-                "a.good_old_price, " +
-                "a.good_new_price, " +
+                "a.good_price, " +
                 "a.good_sale_num, " +
-                "a.good_stock, " +
                 "b.cate_id, " +
                 "b.cate_name, " +
                 "c.store_id, " +
@@ -143,11 +131,8 @@ public interface GoodMapper extends BaseMapper<Good> {
                 "a.good_id, " +
                 "a.good_name, " +
                 "a.good_image_url, " +
-                "a.good_describe, " +
-                "a.good_old_price, " +
-                "a.good_new_price, " +
+                "a.good_price, " +
                 "a.good_sale_num, " +
-                "a.good_stock, " +
                 "b.cate_id, " +
                 "b.cate_name, " +
                 "c.store_id, " +
