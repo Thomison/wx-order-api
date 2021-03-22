@@ -53,10 +53,14 @@ public class OrderItem {
      * 商品所属分类
      */
     @TableField(exist = false)
+    private Integer cateId;
+    @TableField(exist = false)
     private String cateName;
     /**
      * 商品所属店铺
      */
+    @TableField(exist = false)
+    private Integer storeId;
     @TableField(exist = false)
     private String storeName;
     /**

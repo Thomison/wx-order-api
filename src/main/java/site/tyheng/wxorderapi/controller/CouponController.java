@@ -10,6 +10,7 @@ import site.tyheng.wxorderapi.entity.CouponUser;
 import site.tyheng.wxorderapi.entity.User;
 import site.tyheng.wxorderapi.service.*;
 import site.tyheng.wxorderapi.utils.CommonResult;
+import sun.util.resources.LocaleData;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -137,13 +138,24 @@ public class CouponController {
     }
 
     /**
-     * 查询用户领取的所有优惠券
+     * 根据 openId 查询用户领取的所有优惠券
      */
-    @GetMapping("/coupons/mine")
-    public CommonResult getAllUserCoupon() {
-        List<CouponUser> couponUserList = couponUserService.list();
+    @GetMapping("/coupons/{openId}")
+    public CommonResult getAllUserCoupon(@PathVariable String openId) {
+        final LocalDateTime checkTime = LocalDateTime.now();
+        // 通过openid查找指定用户领取的优惠券
+        List<CouponUser> couponUserList =
+                couponUserService.list(
+                        new QueryWrapper<CouponUser>().eq("open_id", openId));
+        // 构造返回结果(优惠券列表)
         List<JSONObject> result = new ArrayList<>();
         for(CouponUser couponUser: couponUserList) {
+            // 检查优惠券有效期 更新优惠券状态
+            if (checkTime.isAfter(couponUser.getEndTime())) {
+                // 设置优惠券已过期
+                couponUser.setCouponStatus(2);
+                couponUserService.updateById(couponUser);
+            }
             JSONObject jsonObject = JSONUtil.parseObj(couponUser);
             // 构造用户领取优惠券的信息
             Coupon coupon = couponService.getById(couponUser.getCouponId());
@@ -155,7 +167,7 @@ public class CouponController {
             if (coupon.getStoreId() != 0) {
                 jsonObject.set("storeName", storeService.getById(coupon.getStoreId()).getName());
             }
-            jsonObject.set("goodId", coupon.getStoreId());
+            jsonObject.set("goodId", coupon.getGoodId());
             if (coupon.getGoodId() != 0) {
                 jsonObject.set("goodName", goodService.getById(coupon.getGoodId()).getName());
             }
@@ -168,5 +180,18 @@ public class CouponController {
             return CommonResult.success(result, "查询成功");
         }
     }
+
+//    /**
+//     * 检查并更新用户优惠券状态
+//     */
+//    @GetMapping("/coupon/{openId}/check")
+//    public CommonResult updateUserCouponsStatus(@PathVariable String openId) {
+//        // 通过openid查找指定用户领取的优惠券
+//        List<CouponUser> couponUserList =
+//                couponUserService.list(
+//                        new QueryWrapper<CouponUser>().eq("open_id", openId));
+//        // 检查优惠券
+//
+//    }
 
 }
