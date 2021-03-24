@@ -132,5 +132,38 @@ public class RecordController {
         }
         return CommonResult.success(jsonObjectList, "查询所有访问记录成功");
     }
+
+    /**
+     * 查询用户对某一商品的访问记录
+     */
+    @GetMapping("/records/{openId}/{goodId}")
+    public CommonResult getUserRecordsByGoodId(@PathVariable(value = "openId") String openId, @PathVariable Integer goodId) {
+        List<Record> recordList = recordService.list(
+                new QueryWrapper<Record>()
+                        .eq("user_openid", openId)
+                        .eq("good_id", goodId)
+        );
+        if (recordList == null) {
+            return CommonResult.failed("查询失败");
+        } else {
+            return CommonResult.success(recordList, "查询成功");
+        }
+    }
+
+    /**
+     * 查询指定用户的全部访问记录
+     */
+    @GetMapping("/records/{openId}")
+    public CommonResult getUserRecords(@PathVariable(value = "openId") String openId) {
+        List<Record> recordList = recordService.list(
+                new QueryWrapper<Record>()
+                        .eq("user_openid", openId)
+        );
+        if (recordList == null) {
+            return CommonResult.failed("查询失败");
+        } else {
+            return CommonResult.success(recordList, "查询成功");
+        }
+    }
 }
 
